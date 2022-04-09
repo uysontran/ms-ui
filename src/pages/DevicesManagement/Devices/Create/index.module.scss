@@ -1,0 +1,10 @@
+.container {
+  height: 100%;
+  padding-top: 20px;
+  overflow: hidden;
+  z-index: 9;
+  .Carousel {
+    height: 100%;
+    width: 100%;
+  }
+}

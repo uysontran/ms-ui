@@ -25,8 +25,10 @@ export default function SideBarLayout() {
                 }
                 className={clsx([
                   style.LinkHolder,
-                  currentPath === route.path && style.LinkHolderActive,
+                  currentPath.slice(0, route.path.length) === route.path &&
+                    style.LinkHolderActive,
                 ])}
+                key={index + "sidebar"}
               >
                 <div className={style.iconHolder}>{route.icon}</div>
                 <span>{route.label}</span>

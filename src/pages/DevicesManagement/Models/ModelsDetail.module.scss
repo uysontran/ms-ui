@@ -1,0 +1,38 @@
+.container {
+  height: 100%;
+  user-select: none;
+
+  margin: 20px 0px;
+  display: flex;
+  flex-direction: column;
+  select {
+    background-color: #eff4f9 !important;
+  }
+  .head {
+    padding: 0px 25px;
+    .header {
+      font-size: 25px;
+      font-weight: 600;
+    }
+    .headContent {
+      width: 100%;
+      margin-top: 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .content {
+    padding: 20px 0px;
+    overflow: auto;
+    margin: 10px 25px;
+    height: 600px;
+  }
+  .footer {
+    margin-top: 20px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-right: 25px;
+    justify-self: end;
+  }
+}

@@ -14,8 +14,10 @@ function App() {
           <Route
             element={<Layout type={route.layout} props={route.layoutProps} />}
             key={"App router" + index}
+            path={route.path}
           >
-            <Route element={<Element />} path={route.path} />
+            <Route index element={<Element />} />
+            <Route element={<Element />} path="*" />
           </Route>
         );
       })}

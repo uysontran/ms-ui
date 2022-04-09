@@ -1,0 +1,37 @@
+.container {
+  user-select: none;
+  height: 600px;
+  margin: 20px 0px;
+  display: flex;
+  flex-direction: column;
+  .head {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding: 0px 25px;
+  }
+  .content {
+    padding: 20px 0px;
+    overflow: auto;
+    div {
+      margin: 0px 25px;
+      padding: 10px 30px;
+      height: 70px;
+      background-color: #fbfbfd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      border-radius: 5px;
+      &:hover {
+        background-color: #f5f6f9;
+      }
+    }
+  }
+  .footer {
+    margin-top: 20px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-right: 25px;
+  }
+}

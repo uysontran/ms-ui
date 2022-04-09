@@ -4,6 +4,8 @@
   --sidebar-background: #29303b;
   --sidebar-hover-background: #475364;
   --sidebar-active-background: #3e495a;
+  box-sizing: border-box;
+  margin: 0;
 }
 @font-face {
   font-family: "Poppins";
@@ -16,7 +18,12 @@ body,
   width: 100%;
   height: 100%;
   overflow: hidden;
-  margin: 0;
   box-sizing: border-box;
   font-family: "Poppins";
+}
+a,
+a:active,
+a:focus,
+a:hover {
+  text-decoration: none !important;
 }

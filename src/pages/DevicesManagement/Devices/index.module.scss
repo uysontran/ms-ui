@@ -1,0 +1,34 @@
+.container {
+  height: 100%;
+  width: 100%;
+  user-select: none;
+  padding-top: 30px;
+
+  .tableContainer {
+    margin-top: 10px;
+    box-shadow: 5px 5px 5px #e0e0e0;
+    overflow: auto;
+    border: 1px solid #e0e0e0;
+    padding: 10px 10px;
+    border-radius: 10px;
+  }
+  .buttonHolder {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    .createButton {
+      cursor: pointer;
+      color: white;
+      padding: 10px 10px;
+      background-color: var(--active);
+      border-radius: 10px;
+      align-self: end;
+      &:hover {
+        background-color: var(--active-hover);
+      }
+    }
+  }
+  td {
+    text-align: center;
+  }
+}
