@@ -15,7 +15,7 @@ export const upProtocol = {
   ],
 };
 export const downProtocol = {
-  modbusTCP: [
+  modbusRTU: [
     { name: "path", default: "", isAdvance: false },
     { name: "unitId", default: "", isAdvance: false },
     { name: "baudRate", default: "", isAdvance: false },
@@ -23,7 +23,7 @@ export const downProtocol = {
     { name: "stopBits", default: "", isAdvance: true },
     { name: "dataBits", default: "", isAdvance: true },
   ],
-  modbusRTU: [
+  modbusTCP: [
     { name: "host", default: "", isAdvance: false },
     { name: "port", default: "", isAdvance: false },
     { name: "unitId", default: "", isAdvance: false },

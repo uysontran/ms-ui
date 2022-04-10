@@ -4,7 +4,10 @@
   .select {
     display: flex;
     flex-direction: row;
-    select {
+    justify-content: space-between;
+    width: 300px;
+    select,
+    input {
       margin-left: 10px;
     }
   }
@@ -20,20 +23,6 @@
     background-color: var(--active);
     &:hover {
       background-color: var(--active-hover);
-    }
-  }
-  .back {
-    cursor: pointer;
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    padding: 20px 30px;
-    border-radius: 10px;
-    border: none;
-    color: white;
-    background-color: var(--deactive);
-    &:hover {
-      background-color: var(--deactive-hover);
     }
   }
 }

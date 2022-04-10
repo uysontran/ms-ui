@@ -1,6 +1,8 @@
 * {
   --active: #00ad55;
   --active-hover: #05db6e;
+  --deactive: #6e6e6e;
+  --deactive-hover: #777777;
   --sidebar-background: #29303b;
   --sidebar-hover-background: #475364;
   --sidebar-active-background: #3e495a;
