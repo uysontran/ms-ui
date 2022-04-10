@@ -28,16 +28,60 @@
     }
   }
 }
-.table {
-  border-collapse: collapse;
-  // min-width: 500px;
-  height: max-content;
-  width: 100%;
-  tr {
-    border-bottom: 0.5px solid rgba(224, 224, 224, 1);
+.tableContainer {
+  margin-top: 30px;
+  .table {
+    display: table;
     width: 100%;
-    height: 50px;
-    table-layout: fixed;
-    border-spacing: 30px;
+    user-select: none;
+    border: 1px solid rgb(70, 70, 70);
+    .tr {
+      display: table-row;
+      height: 50px;
+      border-bottom: 0.5px solid rgba(224, 224, 224, 1);
+      width: 100%;
+      height: 50px;
+      table-layout: fixed;
+      .td {
+        display: table-cell;
+        // text-align: center;
+        vertical-align: middle;
+        height: 50px;
+        border: 1px solid rgb(70, 70, 70);
+        div,
+        input,
+        select {
+          padding: 10px 10px;
+          width: 100%;
+          height: 50px;
+          border: 0px solid rgb(70, 70, 70);
+          background-color: inherit;
+          color: black;
+        }
+      }
+    }
+    .addRow {
+      .td {
+        background-color: #e2e2e2;
+        color: rgb(95, 94, 94);
+      }
+      &active {
+        .td {
+          background-color: inherit;
+          color: black;
+        }
+      }
+    }
   }
+}
+.next {
+  cursor: pointer;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  background-color: var(--active);
 }

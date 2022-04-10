@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-export { default as useToast } from "./Toast";
+import Toast from "./Toast";
 export function useDevicesInfo() {
   return useQuery(
     "devices-info",
@@ -25,11 +25,19 @@ export function useModelsInfo() {
     }
   );
 }
-export function useMutationModel() {
+export function useMutationModel({ onSuccess }) {
   const queryClient = useQueryClient();
+  const errorToast = Toast("error");
   return useMutation((data) => axios.post("/models", data), {
     onSuccess: () => {
+      onSuccess();
       queryClient.invalidateQueries("models-info");
     },
+    onError: (error, variables, context) => {
+      errorToast(error.response?.data);
+    },
   });
+}
+export function useToast(prop) {
+  return Toast(prop);
 }

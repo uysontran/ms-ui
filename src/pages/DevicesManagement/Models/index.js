@@ -3,6 +3,7 @@ import { useState } from "react";
 import style from "./index.module.scss";
 import { useModelsInfo } from "hooks";
 import ModelsDetail from "../Models/ModelsDetails";
+import { Link } from "react-router-dom";
 export default function Devices() {
   const { data = [] } = useModelsInfo();
   const [select, setSelect] = useState([]);
@@ -72,6 +73,11 @@ export default function Devices() {
 
   return (
     <div className={style.container}>
+      <div className={style.buttonHolder}>
+        <Link to="new">
+          <div className={style.createButton}>+ Create</div>
+        </Link>
+      </div>
       <div className={style.tableContainer}>
         <Table
           head={tableHead}

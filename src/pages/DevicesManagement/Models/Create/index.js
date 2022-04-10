@@ -1,12 +1,17 @@
 import style from "./index.module.scss";
 import { useRef, useState } from "react";
-import { useToast } from "hooks";
 import { useMutationModel } from "hooks";
+import clsx from "clsx";
+import { useNavigate } from "react-router-dom";
+
 export default function CreateModel() {
+  const navigate = useNavigate();
   const [type, setType] = useState("modbusChannels");
   const [channels, setChannels] = useState([]);
-  const errorToast = useToast("error");
-  const { mutate } = useMutationModel();
+  const [focus, setFocus] = useState(false);
+  const { mutate } = useMutationModel({
+    onSuccess: () => navigate(-1),
+  });
   const tableHead = {
     modbusChannels: [
       "Channel Name",
@@ -30,7 +35,58 @@ export default function CreateModel() {
     ],
   };
   const form1 = useRef();
-  const form2 = useRef();
+  function newChannel(form) {
+    form.preventDefault();
+    setChannels([
+      ...channels,
+      typeList[type].map((prop, index) => {
+        if (form.target[prop].dataset.type === "number") {
+          return parseFloat(form.target[prop].value);
+        } else {
+          return form.target[prop].value;
+        }
+      }),
+    ]);
+    console.log("reset");
+    form.target.reset();
+    form.target.blur();
+  }
+  function focusAddChannel(form) {
+    newChannel(form);
+    setFocus(true);
+  }
+  function unFocusAddChannel(form) {
+    newChannel(form);
+    setFocus(false);
+  }
+  function editChannel(form, index) {
+    form.preventDefault();
+    channels[index] = typeList[type].map((prop, index) => {
+      if (form.target[prop].dataset.type === "number") {
+        return parseFloat(form.target[prop].value);
+      } else {
+        return form.target[prop].value;
+      }
+    });
+    setChannels(channels);
+  }
+  function createModel() {
+    const data = {
+      name: form1.current.name.value,
+      manufacture: form1.current.manufacture.value,
+      type: type,
+      channels: channels.map((channel) =>
+        channel.reduce(
+          (object, value, index) => ({
+            ...object,
+            [typeList[type][index]]: value,
+          }),
+          {}
+        )
+      ),
+    };
+    mutate(data);
+  }
   return (
     <div className={style.container}>
       <form onSubmit={(e) => e.preventDefault()} ref={form1}>
@@ -57,84 +113,48 @@ export default function CreateModel() {
         </div>
         <input type="submit" style={{ display: "none" }} />
       </form>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          let vadidate = false;
-          typeList[type].every((el, index) => {
-            if (e.target[el].value === "") {
-              errorToast("please enter " + tableHead[type][index]);
-              vadidate = true;
-              return false;
-            }
-            return true;
-          });
-          if (vadidate) return;
-          setChannels([
-            ...channels,
-            typeList[type].map((el) => ({
-              value:
-                e.target[el].dataset.type === "number"
-                  ? parseFloat(e.target[el].value)
-                  : e.target[el].value,
-            })),
-          ]);
-
-          e.target.reset();
-        }}
-        ref={form2}
-      >
-        <table className={style.table}>
-          <tbody>
-            <tr>
-              {tableHead[type].map((e, i) => (
-                <td key={i + e + "modelcreate"}>{e}</td>
-              ))}
-            </tr>
-            {channels.length === 0
-              ? null
-              : channels.map((channel, id) => (
-                  <tr key={id + "modelCreate2"}>
-                    {channel.map((e, i) => (
-                      <td key={i + e + "modelCreate2"}>{e.value}</td>
-                    ))}
-                  </tr>
-                ))}
-            <tr>
-              <AddRow />
-            </tr>
-          </tbody>
-        </table>
-        <input type="submit" style={{ display: "none" }} />
-      </form>
-      <button
-        onClick={() => {
-          if (form1.current.name.value === undefined) {
-            errorToast("please enter model name");
-            return;
-          } else if (channels.length === 0) {
-            errorToast("model must have channels");
-          } else {
-            const data = {
-              name: form1.current.name.value,
-              type: type,
-              manufacture: form1.current.manufacture.value,
-              channels: channels.map((channel) =>
-                channel.reduce(function (object, e, i) {
-                  return {
-                    ...object,
-                    [typeList[type][i]]: e.value,
-                  };
-                }, {})
-              ),
-            };
-
-            mutate(data);
-          }
-        }}
-      >
-        Create
-      </button>
+      <div className={style.tableContainer}>
+        <div className={style.table}>
+          <div className={style.tr}>
+            {tableHead[type].map((head, index) => (
+              <div key={"tableHead" + index} className={style.td}>
+                <div>{head}</div>
+              </div>
+            ))}
+          </div>
+          {channels.map((channel, index) => (
+            <form
+              className={style.tr}
+              key={"channels" + index}
+              onSubmit={(form) => {
+                editChannel(form, index);
+              }}
+              onBlur={(form) => {
+                editChannel(form, index);
+              }}
+            >
+              <AddModbusChannel channel={channel} />
+              <input type="submit" hidden />
+            </form>
+          ))}
+          <form
+            className={clsx([
+              style.tr,
+              style.addRow,
+              focus && style.addRowactive,
+            ])}
+            onSubmit={newChannel}
+            onFocus={focusAddChannel}
+            onBlur={unFocusAddChannel}
+          >
+            <AddRow />
+            <input type="submit" hidden />
+          </form>
+          <button className={style.next} onClick={createModel}>
+            Create
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -144,7 +164,7 @@ function AddRow({ type }) {
       return <AddModbusChannel />;
   }
 }
-function AddModbusChannel() {
+function AddModbusChannel({ channel = ["", "03", "", "1", "Int16BE", 1, 1] }) {
   const parseValue16 = ["Int16BE", "Int16LE", "UInt16BE", "UInt16LE"];
   const parseValue32 = [
     "Int32BE",
@@ -165,30 +185,41 @@ function AddModbusChannel() {
   const [parse, setParse] = useState("1");
   return (
     <>
-      <td>
-        <input type="text" name="channel_name" />
-      </td>
-      <td>
-        <select name="fc">
+      <div className={style.td}>
+        <input
+          type="text"
+          name="channel_name"
+          defaultValue={channel[0]}
+          required={true}
+        />
+      </div>
+      <div className={style.td}>
+        <select name="fc" defaultValue={channel[1]}>
           <option value="03">03</option>
         </select>
-      </td>
-      <td>
-        <input type="text" name="addr" />
-      </td>
-      <td>
+      </div>
+      <div className={style.td}>
+        <input
+          type="text"
+          name="addr"
+          defaultValue={channel[2]}
+          required={true}
+        />
+      </div>
+      <div className={style.td}>
         <select
           name="quantity"
           onChange={(e) => setParse(e.target.value)}
           data-type="number"
+          defaultValue={channel[3]}
         >
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="4">4</option>
         </select>
-      </td>
-      <td>
-        <select name="parse">
+      </div>
+      <div className={style.td}>
+        <select name="parse" defaultValue={channel[4]}>
           {parse === "1" &&
             parseValue16.map((e) => (
               <option value={e} key={e}>
@@ -208,24 +239,24 @@ function AddModbusChannel() {
               </option>
             ))}
         </select>
-      </td>
-      <td>
+      </div>
+      <div className={style.td}>
         <input
           type="number"
           name="scale"
           step="any"
-          defaultValue={1}
+          defaultValue={channel[5] || 1}
           data-type="number"
         />
-      </td>
-      <td>
+      </div>
+      <div className={style.td}>
         <input
           type="number"
           name="precision"
-          defaultValue={1}
+          defaultValue={channel[6] || 1}
           data-type="number"
         />
-      </td>
+      </div>
     </>
   );
 }

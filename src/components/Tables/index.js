@@ -174,7 +174,10 @@ export default function Table({
             Sort(changedData, sortMethod, head)
               .filter(
                 (e, index) =>
-                  Math.abs(index + 1 - (rowPerPage * page) / 2) < rowPerPage / 2
+                  Math.abs(
+                    index - (2 * rowPerPage * page - rowPerPage - 1) / 2
+                  ) <
+                  rowPerPage / 2
               )
               .map(({ onDoubleClick = () => {}, ...row }, id) => (
                 <tr
@@ -220,7 +223,11 @@ export default function Table({
       <div className={style.toolBox}>
         <div className={style.pageSelect}>
           <div>Page: </div>
-          <select onChange={(e) => setPage(e)} name="page">
+          <select
+            onChange={(e) => setPage(parseInt(e.target.value))}
+            name="page"
+            value={page}
+          >
             {[...Array(Math.ceil(data.length / rowPerPage))].map(
               (element, index) => (
                 <option key={index + "option"} value={index + 1}>
@@ -231,8 +238,7 @@ export default function Table({
           </select>
         </div>
         <div className={style.pageNum}>
-          {data.length === 0 ? 0 : (page - 1) * rowPerPage + 1} of{" "}
-          {data.length - (page - 1) * rowPerPage}
+          of {Math.ceil(data.length / rowPerPage)}
         </div>
         <div className={style.iconHolder}>
           <AiOutlineArrowLeft
