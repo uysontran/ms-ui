@@ -141,7 +141,7 @@ export default function Table({
     }
   }, [data, selected]);
   return (
-    <div>
+    <>
       <table className={ClassDestruction(classes, "container")}>
         <tbody className={ClassDestruction(classes, "body")}>
           <tr
@@ -195,7 +195,12 @@ export default function Table({
                     }
                   }}
                   key={row.id + "" + id}
-                  onDoubleClick={(e) => row.onDoubleClick(e, row)}
+                  onDoubleClick={(e) => {
+                    if (row.onDoubleClick) {
+                      row.onDoubleClick(e, row);
+                    } else {
+                    }
+                  }}
                 >
                   {checkbox && (
                     <td className={style.checkbox}>
@@ -259,6 +264,6 @@ export default function Table({
           />
         </div>
       </div>
-    </div>
+    </>
   );
 }

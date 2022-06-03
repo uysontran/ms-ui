@@ -1,13 +1,10 @@
 .container {
-  height: 100%;
+  height: 80vh;
   user-select: none;
-
   margin: 20px 0px;
   display: flex;
   flex-direction: column;
-  select {
-    background-color: #eff4f9 !important;
-  }
+  min-width: 500px;
   .head {
     padding: 0px 25px;
     .header {
@@ -24,15 +21,14 @@
   }
   .content {
     padding: 20px 0px;
-    overflow: auto;
     margin: 10px 25px;
     height: 600px;
+    overflow: auto;
   }
   .footer {
-    margin-top: 20px;
     cursor: pointer;
-    align-self: flex-end;
-    margin-right: 25px;
-    justify-self: end;
+    padding-right: 20px;
+    display: flex;
+    justify-content: flex-end;
   }
 }

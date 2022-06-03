@@ -1,0 +1,28 @@
+.container {
+  padding: 30px 30px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  h1 {
+    font-size: 32px;
+    font-weight: bold;
+    user-select: none;
+  }
+  .buttonHolder {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    .createButton {
+      cursor: pointer;
+      color: white;
+      padding: 10px 10px;
+      background-color: var(--active);
+      border-radius: 10px;
+      align-self: end;
+      &:hover {
+        background-color: var(--active-hover);
+      }
+    }
+  }
+}

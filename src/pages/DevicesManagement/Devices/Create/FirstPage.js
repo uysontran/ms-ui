@@ -3,13 +3,25 @@ import Table from "components/Tables";
 import { Link } from "react-router-dom";
 import style from "./FirstPage.module.scss";
 import { useToast } from "hooks";
-import { useState } from "react";
-import { useModelsInfo } from "hooks";
-export default function FirstPage({ setIndex, submitData, setSubmitData }) {
+import { useState, useRef } from "react";
+import { useModelsInfo, useServiceInfo, useProtcolConfig } from "hooks";
+import { AiTwotoneEdit } from "react-icons/ai";
+import ProtocolBox from "./ProtocolBox";
+export default function FirstPage({ submitData, setSubmitData }) {
+  //state
   const [select, setSelect] = useState([]);
   const [open, setOpen] = useState(false);
   const [modelId, setModelId] = useState(null);
+  const upService = useRef({ value: null });
+  const downService = useRef({ value: null });
+  const [openConnection, setOpenConnection] = useState(false);
+  const [openServer, setOpenServer] = useState(false);
+  //api
   const { data = [] } = useModelsInfo();
+  const services = useServiceInfo();
+  const downServiceData = useProtcolConfig(downService.current.value);
+  const upServiceData = useProtcolConfig(upService.current.value);
+  //data processing
   const info = data.map((e) => tableBody(e));
   const tableHead = [
     {
@@ -37,43 +49,20 @@ export default function FirstPage({ setIndex, submitData, setSubmitData }) {
 
   function tableBody(data) {
     return {
+      onClick: () => {
+        setOpen(true);
+        setModelId(data);
+      },
       name: {
-        value: (
-          <div
-            onClick={() => {
-              setOpen(true);
-              setModelId(data.id);
-            }}
-          >
-            {data.name}
-          </div>
-        ),
+        value: <div>{data.name}</div>,
         key: data.name,
       },
       manufacture: {
-        value: (
-          <div
-            onClick={() => {
-              setOpen(true);
-              setModelId(data.id);
-            }}
-          >
-            {data.manufacture}
-          </div>
-        ),
+        value: <div>{data.manufacture}</div>,
         key: data.manufacture,
       },
       type: {
-        value: (
-          <div
-            onClick={() => {
-              setOpen(true);
-              setModelId(data.id);
-            }}
-          >
-            {data.type}
-          </div>
-        ),
+        value: <div>{data.type}</div>,
         key: data.type,
       },
       select: {
@@ -94,29 +83,88 @@ export default function FirstPage({ setIndex, submitData, setSubmitData }) {
             if (e.target.name.value === "") {
               errorToast("Please enter device name");
             } else {
-              if (e.target.interval.value === "") {
-                errorToast("Please enter device inverval");
-              } else {
-                setSubmitData({
-                  ...submitData,
-                  modelId: e.target.id.value,
-                  name: e.target.name.value,
-                  interval: e.target.interval.value,
-                });
-                setIndex(1);
-              }
+              setSubmitData({
+                ...submitData,
+                modelId: e.target.id.value,
+                name: e.target.name.value,
+              });
             }
           }
         }}
       >
         <div className={style.inputFields}>
-          <div className={style.inputField}>
-            <div>Name:</div>
-            <input name="name" type="text" id="name" />
+          <div className={style.inputRow}>
+            <div className={style.inputField}>
+              <div>Name:</div>
+              <input name="name" type="text" id="name" />
+            </div>
           </div>
-          <div className={style.inputField}>
-            <div>Interval:</div>
-            <input name="interval" type="number" id="interval" />
+          <div className={style.inputRow}>
+            <div className={style.inputField}>
+              <div>Down Service:</div>
+              <select ref={downService}>
+                {services.data
+                  ? services.data
+                      .filter((e) => e.type === "downService")
+                      .map((e, i) => (
+                        <option key={i} value={e.id}>
+                          {e.name}
+                        </option>
+                      ))
+                  : null}
+              </select>
+            </div>
+            <div className={style.inputField}>
+              <div>Connection</div>
+              <div style={{ display: "flex" }}>
+                <select>
+                  {downServiceData.data
+                    ? downServiceData.data.map((e, i) => (
+                        <option key={i} value={e.id}>
+                          {e.name}
+                        </option>
+                      ))
+                    : null}
+                </select>
+                <div style={{ paddingLeft: "10px", cursor: "pointer" }}>
+                  <AiTwotoneEdit />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={style.inputRow}>
+            <div className={style.inputField}>
+              <div>Up Service:</div>
+              <select ref={upService}>
+                {services.data
+                  ? services.data
+                      .filter((e) => e.type === "upService")
+                      .map((e, i) => (
+                        <option key={i} value={e.id}>
+                          {e.name}
+                        </option>
+                      ))
+                  : null}
+              </select>
+            </div>
+            <div className={style.inputField}>
+              <div>Server</div>
+              <div style={{ display: "flex" }}>
+                <select>
+                  {upServiceData.data
+                    ? upServiceData.data.map((e, i) => (
+                        <option key={i} value={e.id}>
+                          {e.name}
+                        </option>
+                      ))
+                    : null}
+                  <option></option>
+                </select>
+                <div style={{ paddingLeft: "10px", cursor: "pointer" }}>
+                  <AiTwotoneEdit />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className={style.tableContainer}>
@@ -139,7 +187,7 @@ export default function FirstPage({ setIndex, submitData, setSubmitData }) {
       </form>
       {modelId !== null && (
         <ModelsDetail
-          modelId={modelId}
+          data={modelId}
           open={open}
           onClose={() => setOpen(false)}
         />

@@ -4,12 +4,14 @@ import {
   BsCloudArrowUp,
   BsCloudCheck,
   BsCloudSlash,
+  BsInfoCircle,
 } from "react-icons/bs";
+import { AiOutlineDelete } from "react-icons/ai";
 import ReactTooltip from "react-tooltip";
 
 import { ConfirmBox } from "components/ToolBox";
 import Table from "components/Tables";
-import { useDevicesInfo } from "hooks";
+import { useDevicesInfo, useModelsInfo, useProvision } from "hooks";
 import style from "./index.module.scss";
 import { databaseCheck, databaseX } from "assets";
 import TableBox from "./TableBox";
@@ -18,7 +20,11 @@ import { Link } from "react-router-dom";
 export default function Devices() {
   const [select, setSelect] = useState([]);
   const { data = [] } = useDevicesInfo();
+  const data1 = useModelsInfo().data;
   const info = data.map((e) => tableBody(e));
+  const [open, setOpen] = useState(false);
+  const [modelId, setModelId] = useState(null);
+  const { mutate } = useProvision({ onSuccess: () => {} });
   const tableHead = [
     {
       id: "name",
@@ -26,27 +32,22 @@ export default function Devices() {
       label: "Name",
     },
     {
-      id: "interval",
-      numberic: true,
-      label: "Interval",
-    },
-    {
       id: "isProvision",
-      numberic: false,
+      numberic: true,
       label: "Provision Status",
     },
     {
       id: "isPersistence",
-      numberic: false,
+      numberic: true,
       label: "Persistence Status",
     },
     {
-      id: "northProtocol",
+      id: "upProtocol",
       numberic: false,
       label: "Up Protocol",
     },
     {
-      id: "southProtocol",
+      id: "downProtocol",
       numberic: false,
       label: "Down Protocol",
     },
@@ -54,11 +55,6 @@ export default function Devices() {
       id: "modelName",
       numberic: false,
       label: "Model Name",
-    },
-    {
-      id: "startTime",
-      numberic: true,
-      label: "Start Time",
     },
     {
       id: "provision",
@@ -72,21 +68,34 @@ export default function Devices() {
       label: "",
       isSort: false,
     },
+    {
+      id: "delete",
+      numberic: false,
+      label: "",
+      isSort: false,
+    },
   ];
-
   function tableBody(data) {
     return {
       name: {
         value: <div>{data.name}</div>,
         key: data.name,
       },
-      interval: {
-        value: <div>{data.interval}</div>,
-        key: data.interval,
-      },
-      startTime: {
-        value: <div>{new Date(data.startTime).toLocaleString("vi-VN")}</div>,
-        key: Date.parse(data.startTime),
+      modelName: {
+        value: (
+          <div
+            onClick={() => {
+              const temp = (data1?.length ? data1 : []).find(
+                (e) => e.name === data.Model.name
+              );
+              setModelId(temp);
+              setOpen(true);
+            }}
+          >
+            {data.Model.name}
+          </div>
+        ),
+        key: data.Model.name,
       },
       isProvision: {
         value: (
@@ -104,7 +113,7 @@ export default function Devices() {
             )}
           </div>
         ),
-        key: data.isProvision,
+        key: data.isProvision ? 1 : 0,
       },
       isPersistence: {
         value: (
@@ -128,44 +137,42 @@ export default function Devices() {
             )}
           </div>
         ),
-        key: data.isPersistence,
+        key: data.isPersistence ? 1 : 0,
       },
-      northProtocol: {
+      upProtocol: {
         value: (
           <TableBox
             trigger={
-              <div style={{ cursor: "pointer" }}>{data.northProtocol}</div>
+              <div style={{ cursor: "pointer" }}>
+                <BsInfoCircle />
+              </div>
             }
-            data={data[data.northProtocol]}
+            data={data.upProtocol}
             head={`${data.name} up protocol`}
           ></TableBox>
         ),
-        key: data.northProtocol,
+        key: data.name,
       },
-      southProtocol: {
+      downProtocol: {
         value: (
           <TableBox
             trigger={
-              <div style={{ cursor: "pointer" }}>{data.southProtocol}</div>
+              <div style={{ cursor: "pointer" }}>
+                <BsInfoCircle />
+              </div>
             }
-            data={data[data.southProtocol]}
+            data={data.downProtocol}
             head={`${data.name} down protocol`}
           ></TableBox>
         ),
-        key: data.southProtocol,
-      },
-      modelName: {
-        value: (
-          <ModelsDetail
-            trigger={<div style={{ cursor: "pointer" }}>{data.model.name}</div>}
-            modelId={data.model.id}
-          ></ModelsDetail>
-        ),
-        key: data.model.name,
+        key: data.name,
       },
       provision: {
         value: (
           <ConfirmBox
+            onConfirm={() => {
+              mutate(data.id);
+            }}
             trigger={
               <div
                 style={{ cursor: "pointer" }}
@@ -188,7 +195,7 @@ export default function Devices() {
             trigger={
               <div
                 style={{ cursor: "pointer" }}
-                data-tip="Upload All Data"
+                data-tip="delete"
                 data-effect="solid"
                 data-place="top"
                 data-for="persistence"
@@ -198,10 +205,30 @@ export default function Devices() {
               </div>
             }
           >
-            Are you sure about upload all data?
+            Are you sure about upload?
           </ConfirmBox>
         ),
         key: data.name,
+      },
+      delete: {
+        value: (
+          <ConfirmBox
+            trigger={
+              <div
+                style={{ cursor: "pointer" }}
+                data-tip="Upload All Data"
+                data-effect="solid"
+                data-place="top"
+                data-for="persistence"
+              >
+                <ReactTooltip id="delete" />
+                <AiOutlineDelete size={25} />
+              </div>
+            }
+          >
+            Are you sure about delete?
+          </ConfirmBox>
+        ),
       },
     };
   }
@@ -222,6 +249,13 @@ export default function Devices() {
             head: { name: style.head, default: true },
           }}
         />
+        {modelId !== null && (
+          <ModelsDetail
+            data={modelId}
+            open={open}
+            onClose={() => setOpen(false)}
+          />
+        )}
       </div>
     </div>
   );

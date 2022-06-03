@@ -1,0 +1,42 @@
+.container {
+  height: 80vh;
+  width: 70vw;
+  min-width: 600px;
+  padding: 10px 10px;
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  .navigate {
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    div {
+      padding: 10px 10px;
+      cursor: pointer;
+    }
+  }
+  .body {
+    padding: 10px 0px;
+    height: 100%;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    .bodyRow {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      padding: 10px;
+      &:hover {
+        background-color: rgb(230, 230, 230);
+      }
+    }
+    h4 {
+      padding: 10px;
+    }
+  }
+}

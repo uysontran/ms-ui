@@ -29,43 +29,20 @@ export default function Devices() {
   ];
   function tableBody(data) {
     return {
+      onClick: () => {
+        setOpen(true);
+        setModelId(data);
+      },
       name: {
-        value: (
-          <div
-            onClick={() => {
-              setOpen(true);
-              setModelId(data.id);
-            }}
-          >
-            {data.name}
-          </div>
-        ),
+        value: <div>{data.name}</div>,
         key: data.name,
       },
       manufacture: {
-        value: (
-          <div
-            onClick={() => {
-              setOpen(true);
-              setModelId(data.id);
-            }}
-          >
-            {data.manufacture}
-          </div>
-        ),
+        value: <div>{data.manufacture}</div>,
         key: data.manufacture,
       },
       type: {
-        value: (
-          <div
-            onClick={() => {
-              setOpen(true);
-              setModelId(data.id);
-            }}
-          >
-            {data.type}
-          </div>
-        ),
+        value: <div>{data.type}</div>,
         key: data.type,
       },
     };
@@ -89,7 +66,7 @@ export default function Devices() {
         />
         {modelId !== null && (
           <ModelsDetail
-            modelId={modelId}
+            data={modelId}
             open={open}
             onClose={() => setOpen(false)}
           />

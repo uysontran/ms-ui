@@ -1,7 +1,6 @@
 import Popup from "reactjs-popup";
 import style from "./TableBox.module.scss";
 export default function TableBox({ trigger, data, head }) {
-  delete data.deviceId;
   return (
     <Popup
       trigger={trigger}

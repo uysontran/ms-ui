@@ -3,7 +3,7 @@ import style from "./ConfirmBox.module.scss";
 import clsx from "clsx";
 export default function ConfirmBox({
   children,
-  onConfirm,
+  onConfirm = () => {},
   trigger,
   cancel = "Cancel",
   confirm = "Confirm",
@@ -27,6 +27,7 @@ export default function ConfirmBox({
             <div
               className={clsx([style.confirm, style.button])}
               onClick={() => {
+                onConfirm();
                 close();
               }}
             >

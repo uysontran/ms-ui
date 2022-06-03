@@ -1,0 +1,22 @@
+.container {
+  height: 100%;
+  width: 100%;
+  user-select: none;
+  padding-top: 30px;
+  .buttonHolder {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    .createButton {
+      cursor: pointer;
+      color: white;
+      padding: 10px 10px;
+      background-color: var(--active);
+      border-radius: 10px;
+      align-self: end;
+      &:hover {
+        background-color: var(--active-hover);
+      }
+    }
+  }
+}

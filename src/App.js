@@ -1,13 +1,13 @@
 import { lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import router from "./constants/router";
 import Layout from "layout";
 
-import "styles/index.css";
 function App() {
   return (
     <Routes>
+      <Route index element={<Navigate to="devices-management" />}></Route>
       {router.map((route, index) => {
         const Element = lazy(() => import(`${route.component}`));
         return (
