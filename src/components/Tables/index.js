@@ -22,6 +22,7 @@ export default function Table({
   checkbox,
   select,
   rowPerPage = 5,
+  footer = [],
 }) {
   const [page, setPage] = useState(1);
   const [sortMethod, setSortMethod] = useState({ id: null, state: null });
@@ -224,6 +225,9 @@ export default function Table({
               ))
           )}
         </tbody>
+        <tfoot>
+          <tr>{footer.map((e) => e)}</tr>
+        </tfoot>
       </table>
       <div className={style.toolBox}>
         <div className={style.pageSelect}>

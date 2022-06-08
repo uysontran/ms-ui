@@ -38,17 +38,20 @@ export function useProtcolConfig(name) {
   return useQuery(
     `protocol?${name}`,
     async () => {
-      const data = await axios
-        .get("/protocol", {
-          params: {
-            id: name,
-          },
-        })
-        .then(({ data }) => data);
-      return data;
+      if (name) {
+        const data = await axios
+          .get("/protocol", {
+            params: {
+              id: name,
+            },
+          })
+          .then(({ data }) => data);
+        return data;
+      }
+      return 0;
     },
     {
-      staleTime: 60000,
+      staleTime: 1000,
     }
   );
 }
@@ -63,4 +66,43 @@ export function useTask() {
       staleTime: 60000,
     }
   );
+}
+export function useMutateProtocol({ onSuccess = () => {} }) {
+  const queryClient = useQueryClient();
+  const errorToast = Toast("error");
+  return useMutation((data) => axios.post("/protocol", data), {
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries("service-info");
+    },
+    onError: (error, variables, context) => {
+      errorToast(error.response?.data);
+    },
+  });
+}
+export function useMutateDevice({ onSuccess = () => {} }) {
+  const queryClient = useQueryClient();
+  const errorToast = Toast("error");
+  return useMutation((data) => axios.post("/devices", data), {
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries("devices-info");
+    },
+    onError: (error, variables, context) => {
+      errorToast(error.response?.data);
+    },
+  });
+}
+export function useMutateTask({ onSuccess = () => {} }) {
+  const queryClient = useQueryClient();
+  const errorToast = Toast("error");
+  return useMutation((data) => axios.post("/tasks", data), {
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries("task");
+    },
+    onError: (error, variables, context) => {
+      errorToast(error.response?.data);
+    },
+  });
 }

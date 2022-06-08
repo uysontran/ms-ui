@@ -6,73 +6,65 @@
   .inputFields {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
-    input {
-      width: 100%;
-      height: 100%;
-      border-style: hidden;
-      outline: none;
-      margin-left: 5px;
-      border-bottom: 1px solid black;
-    }
-    .inputField {
-      width: 40%;
+    .inputRow {
       display: flex;
-      align-items: center;
-      padding: 10px 10px;
-      margin-top: 10px;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-between;
+      .inputField {
+        width: 40%;
+        display: flex;
+        align-items: center;
+        padding: 10px 10px;
+        display: flex;
+        justify-content: space-between;
+        input {
+          width: 300px;
+          height: 60%;
+          border-style: hidden;
+          outline: none;
+          margin-left: 5px;
+          border-bottom: 1px solid black;
+          font-size: 15px;
+        }
+        select {
+          width: 300px;
+          height: 100%;
+          font-size: 14px;
+          margin-left: 5px;
+        }
+      }
     }
-    .field {
-      margin-left: 20px;
+  }
+  .tfooter {
+    height: 50px;
+    cursor: pointer;
+    &:hover {
+      background-color: #fafafa;
+    }
+  }
+  .buttonHolder {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    .createButton {
+      cursor: pointer;
+      color: white;
+      padding: 10px 10px;
+      background-color: var(--active);
+      border-radius: 10px;
+      border: none;
+      align-self: end;
+      &:hover {
+        background-color: var(--active-hover);
+      }
     }
   }
 }
 .tableContainer {
   margin-top: 30px;
-  .table {
-    display: table;
-    width: 100%;
-    user-select: none;
-    border: 1px solid rgb(70, 70, 70);
-    .tr {
-      display: table-row;
-      height: 50px;
-      border-bottom: 0.5px solid rgba(224, 224, 224, 1);
-      width: 100%;
-      height: 50px;
-      table-layout: fixed;
-      .td {
-        display: table-cell;
-        // text-align: center;
-        vertical-align: middle;
-        height: 50px;
-        border: 1px solid rgb(70, 70, 70);
-        div,
-        input,
-        select {
-          padding: 10px 10px;
-          width: 100%;
-          height: 50px;
-          border: 0px solid rgb(70, 70, 70);
-          background-color: inherit;
-          color: black;
-        }
-      }
-    }
-    .addRow {
-      .td {
-        background-color: #e2e2e2;
-        color: rgb(95, 94, 94);
-      }
-      &active {
-        .td {
-          background-color: inherit;
-          color: black;
-        }
-      }
-    }
-  }
 }
 .next {
   cursor: pointer;
