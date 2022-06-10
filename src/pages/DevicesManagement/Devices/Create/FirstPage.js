@@ -1,6 +1,6 @@
 import ModelsDetail from "pages/DevicesManagement/Models/ModelsDetails";
 import Table from "components/Tables";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import style from "./FirstPage.module.scss";
 import { useToast } from "hooks";
 import { useState, useRef } from "react";
@@ -22,6 +22,7 @@ export default function FirstPage({ submitData, setSubmitData }) {
   const downService = useRef({ value: null });
   const [openConnection, setOpenConnection] = useState(false);
   const [openServer, setOpenServer] = useState(false);
+  const navigate = useNavigate();
   //api
   const { data = [] } = useModelsInfo();
   const services = useServiceInfo();
@@ -35,6 +36,7 @@ export default function FirstPage({ submitData, setSubmitData }) {
   const { mutate } = useMutateDevice({
     onSuccess: () => {
       console.log("success");
+      navigate(-1);
     },
   });
   const tableHead = [
@@ -80,7 +82,16 @@ export default function FirstPage({ submitData, setSubmitData }) {
         key: data.type,
       },
       select: {
-        value: <input type="radio" name="id" value={data.id} />,
+        value: (
+          <input
+            type="radio"
+            name="id"
+            value={data.id}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          />
+        ),
         key: data.id,
       },
     };

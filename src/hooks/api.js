@@ -18,7 +18,7 @@ export function useProvision({ onSuccess = () => {} }) {
   const errorToast = Toast("error");
   return useMutation(
     (data) =>
-      axios.get("/devies/provision", {
+      axios.get("/devices/provision", {
         params: {
           id: data,
         },
@@ -51,7 +51,7 @@ export function useProtcolConfig(name) {
       return 0;
     },
     {
-      staleTime: 1000,
+      staleTime: 100,
     }
   );
 }

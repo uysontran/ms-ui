@@ -5,6 +5,7 @@ export default function ProtocolBox({ trigger, data, open = false, onClose }) {
   const { mutate } = useMutateProtocol({
     onSuccess: () => {
       console.log("success");
+      window.location.reload();
     },
   });
   return (
@@ -41,11 +42,7 @@ export default function ProtocolBox({ trigger, data, open = false, onClose }) {
                   return (
                     <div className={style.row} key={e.key}>
                       <span>{e.key}</span>
-                      <select
-                        name={e.key}
-                        defaultValue={e.defaultValue}
-                        required
-                      >
+                      <select name={e.key} defaultValue={e.defaultValue}>
                         {JSON.parse(e.values).map((e) => (
                           <option key={e} value={e}>
                             {e}
@@ -62,7 +59,6 @@ export default function ProtocolBox({ trigger, data, open = false, onClose }) {
                         type="text"
                         name={e.key}
                         defaultValue={e.defaultValue}
-                        required
                       />
                     </div>
                   );

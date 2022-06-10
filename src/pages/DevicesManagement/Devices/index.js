@@ -216,7 +216,7 @@ export default function Devices() {
             trigger={
               <div
                 style={{ cursor: "pointer" }}
-                data-tip="Upload All Data"
+                data-tip="Upload Delete Devices"
                 data-effect="solid"
                 data-place="top"
                 data-for="persistence"
