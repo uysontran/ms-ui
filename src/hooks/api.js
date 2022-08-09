@@ -80,6 +80,20 @@ export function useMutateProtocol({ onSuccess = () => {} }) {
     },
   });
 }
+export function useDeleteDevice({ onSuccess = () => {} }) {
+  const queryClient = useQueryClient();
+  const errorToast = Toast("error");
+
+  return useMutation((data) => axios.delete("/devices", { params: data }), {
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries("devices-info");
+    },
+    onError: (error, variables, context) => {
+      errorToast(error.response?.data);
+    },
+  });
+}
 export function useMutateDevice({ onSuccess = () => {} }) {
   const queryClient = useQueryClient();
   const errorToast = Toast("error");

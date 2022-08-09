@@ -11,9 +11,13 @@ import ReactTooltip from "react-tooltip";
 
 import { ConfirmBox } from "components/ToolBox";
 import Table from "components/Tables";
-import { useDevicesInfo, useModelsInfo, useProvision } from "hooks";
+import {
+  useDevicesInfo,
+  useModelsInfo,
+  useProvision,
+  useDeleteDevice,
+} from "hooks";
 import style from "./index.module.scss";
-import { databaseCheck, databaseX } from "assets";
 import TableBox from "./TableBox";
 import ModelsDetail from "../Models/ModelsDetails";
 import { Link } from "react-router-dom";
@@ -25,6 +29,7 @@ export default function Devices() {
   const [open, setOpen] = useState(false);
   const [modelId, setModelId] = useState(null);
   const { mutate } = useProvision({ onSuccess: () => {} });
+  const { mutate: deleteDevice } = useDeleteDevice({ onSuccess: () => {} });
   const tableHead = [
     {
       id: "name",
@@ -35,11 +40,6 @@ export default function Devices() {
       id: "isProvision",
       numberic: true,
       label: "Provision Status",
-    },
-    {
-      id: "isPersistence",
-      numberic: true,
-      label: "Persistence Status",
     },
     {
       id: "upProtocol",
@@ -58,12 +58,6 @@ export default function Devices() {
     },
     {
       id: "provision",
-      numberic: false,
-      label: "",
-      isSort: false,
-    },
-    {
-      id: "persistence",
       numberic: false,
       label: "",
       isSort: false,
@@ -115,30 +109,6 @@ export default function Devices() {
         ),
         key: data.isProvision ? 1 : 0,
       },
-      isPersistence: {
-        value: (
-          <div>
-            {data.isPersistence ? (
-              <div
-                data-tip="This device's data is persist into local storage"
-                data-effect="solid"
-              >
-                <img src={databaseCheck} alt="databaseCheck" width={25} />
-                <ReactTooltip />
-              </div>
-            ) : (
-              <div
-                data-tip="This device's data is not persist into local storage"
-                data-effect="solid"
-              >
-                <img src={databaseX} alt="databaseCheck" width={25} />
-                <ReactTooltip />
-              </div>
-            )}
-          </div>
-        ),
-        key: data.isPersistence ? 1 : 0,
-      },
       upProtocol: {
         value: (
           <TableBox
@@ -189,30 +159,12 @@ export default function Devices() {
         ),
         key: data.name,
       },
-      persistence: {
-        value: (
-          <ConfirmBox
-            trigger={
-              <div
-                style={{ cursor: "pointer" }}
-                data-tip="delete"
-                data-effect="solid"
-                data-place="top"
-                data-for="persistence"
-              >
-                <ReactTooltip id="persistence" />
-                <BsCloudArrowUp size={25} />
-              </div>
-            }
-          >
-            Are you sure about upload?
-          </ConfirmBox>
-        ),
-        key: data.name,
-      },
       delete: {
         value: (
           <ConfirmBox
+            onConfirm={() => {
+              deleteDevice({ id: data.id });
+            }}
             trigger={
               <div
                 style={{ cursor: "pointer" }}
